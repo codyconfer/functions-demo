@@ -6,6 +6,11 @@ export default {
     ],
     link: [
       {
+        rel: "icon",
+        type: "image/ico",
+        href: "/favicon.ico"
+      },
+      {
         rel: "stylesheet",
         type: "text/css",
         href: "https://fonts.googleapis.com/css?family=Roboto"
@@ -21,7 +26,7 @@ export default {
         type: "text/css",
         href:
           "https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
-      }
+      },
     ]
   },
   buildModules: ["@nuxt/typescript-build"],
