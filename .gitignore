@@ -334,3 +334,4 @@ ASALocalRun/
 
 # nuxt
 **/.nuxt
+**/dist
