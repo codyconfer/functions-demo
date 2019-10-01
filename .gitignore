@@ -339,3 +339,6 @@ ASALocalRun/
 # function apps
 **/local.settings.json
 local.settings.json
+api/src/mutate/local.settings.json
+api/src/query/local.settings.json
+api/src/notify/local.settings.json
