@@ -6,9 +6,9 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Logging;
 
-namespace FunctionDemo.Notify
+namespace FunctionsDemo.Notify.Functions
 {
-    public static class NotifyFunction
+    public static class RoomFunction
     {
         [FunctionName(nameof(Notify))]
         public static async Task<List<string>> Notify(
