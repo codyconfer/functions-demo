@@ -22,7 +22,7 @@
                     class="message"
                     type="text"
                     placeholder="message..."
-                    v-model="message"
+                    v-model="body"
                 />
             </span>
             <span class="send-group">
@@ -38,7 +38,7 @@
 export default {
     data: function() {
         return {
-            message: "",
+            body: "",
             username: ""
         };
     },
@@ -46,7 +46,7 @@ export default {
         send: function() {
             this.$store.commit("room/addMessage", {
                 username: this.username,
-                message: this.message
+                body: this.body
             });
         }
     }
