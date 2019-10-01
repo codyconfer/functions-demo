@@ -1,0 +1,20 @@
+{
+  "name": "functions-demo",
+  "scripts": {
+    "dev": "nuxt"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.25",
+    "@fortawesome/free-brands-svg-icons": "^5.11.2",
+    "@fortawesome/free-solid-svg-icons": "^5.11.2",
+    "@fortawesome/vue-fontawesome": "^0.1.7",
+    "nuxt": "^2.9.2",
+    "nuxt-fontawesome": "^0.4.0",
+    "vue-scrollto": "^2.17.1"
+  },
+  "devDependencies": {
+    "@nuxt/typescript-build": "^0.2.10",
+    "node-sass": "^4.12.0",
+    "sass-loader": "^8.0.0"
+  }
+}
