@@ -7,6 +7,10 @@ namespace FunctionsDemo.Query.Services.Room
 {
     public class RoomService
     {
+        #region redis fields
+
+        private const string MessageSetPrefix = "messages-";
+
         private readonly Lazy<ConnectionMultiplexer> _lazyConnection = new Lazy<ConnectionMultiplexer>(() =>
         {
             var connectionString = Environment.GetEnvironmentVariable("RedisConnection");
@@ -19,6 +23,9 @@ namespace FunctionsDemo.Query.Services.Room
         });
 
         private ConnectionMultiplexer RedisConnection => _lazyConnection.Value;
+
+        private readonly IDatabase _db;
+        #endregion redis fields
 
         public MessagesResponse GetMessages(int roomId) 
         {
@@ -101,5 +108,12 @@ namespace FunctionsDemo.Query.Services.Room
                 }
             };
         }
+
+        //public MessagesResponse GetMessagesLive(int roomId)
+        //{
+        //    var db = RedisConnection.GetDatabase();
+        //    var messageKey = $"{MessageSetPrefix}{roomId}";
+        //    var messages = db.StringGet(messageKey);
+        //}
     }
 }
