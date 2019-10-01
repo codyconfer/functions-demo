@@ -14,6 +14,11 @@ export default {
     components: {
         MessageView,
         MessageCompose
+    },
+    head() {
+        return {
+            title: "Functions Demo",
+        };
     }
 };
 </script>
