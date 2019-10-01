@@ -7,7 +7,7 @@
                     id="username"
                     v-bind:style="{ color: colors[message.colorId] }"
                 >{{message.username}}</span>
-                <span class="message">{{message.message}}</span>
+                <span class="message">{{message.body}}</span>
             </div>
         </div>
     </section>

@@ -23,7 +23,7 @@ export const mutations = {
     }
     state.messages.push({
       username: message.username,
-      message: message.message,
+      body: message.body,
       messageId: state.nextMessageId,
       colorId: state.users.indexOf(message.username) % state.colors.length
     });
