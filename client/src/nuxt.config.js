@@ -46,5 +46,6 @@ export default {
         ]
       }
     ]
-  ]
+  ],
+  plugins: ['~/plugins/vue-signalr.js']
 };
