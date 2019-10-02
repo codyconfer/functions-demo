@@ -30,7 +30,7 @@ namespace FunctionsDemo.Mutate.Functions
             }
 
             var service = new RoomService();
-            var result = service.AddMessage(request);
+            var result = await service.AddMessage(request);
             var response = JsonConvert.SerializeObject(result, SerializerSettings);
 
             return new OkObjectResult(response);

@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using System.Threading.Tasks;
 using FunctionsDemo.Mutate.Models.Room;
 using Microsoft.Azure.EventHubs;
 using Newtonsoft.Json;
@@ -30,12 +31,12 @@ namespace FunctionsDemo.Mutate.Services
         }
         #endregion EventHub
 
-        public MessageAddResponse AddMessage(MessageAddRequest request)
+        public async Task<MessageAddResponse> AddMessage(MessageAddRequest request)
         {
             var client = EventHubClient.CreateFromConnectionString(MessageHubConnectionString);
             var json = JsonConvert.SerializeObject(request);
             var data = new EventData(Encoding.UTF8.GetBytes(json));
-            client.SendAsync(data);
+            await client.SendAsync(data);
             return new MessageAddResponse
             {
                 Timestamp = DateTimeOffset.Now
