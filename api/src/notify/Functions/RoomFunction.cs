@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FunctionsDemo.Notify.Models.Room;
+using FunctionsDemo.Notify.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.EventHubs;
@@ -34,7 +35,7 @@ namespace FunctionsDemo.Notify.Functions
             ILogger log)
         {
             var exceptions = new List<Exception>();
-
+            var service = new RoomService();
             foreach (var eventData in events)
             {
                 try
@@ -48,6 +49,7 @@ namespace FunctionsDemo.Notify.Functions
                             Target = "addMessage",
                             Arguments = new object[] { message }
                         });
+                    service.StoreMessage(message);
                     await Task.Yield();
                 }
                 catch (Exception e)

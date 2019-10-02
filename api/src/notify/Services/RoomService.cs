@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using FunctionsDemo.Notify.Models.Room;
 using Microsoft.Azure.WebJobs;
@@ -31,7 +33,18 @@ namespace FunctionsDemo.Notify.Services
         {
             var db = RedisConnection.GetDatabase();
             var messageKey = $"{MessageSetPrefix}0";
-            var messages = JsonConvert.SerializeObject(message);
+            var messageEntriesString = db.StringGet(messageKey);
+            List<Message> messageEntries;
+            if(!messageEntriesString.IsNullOrEmpty)
+            {
+                messageEntries = JsonConvert.DeserializeObject<List<Message>>(messageEntriesString);
+                messageEntries.ToList().Add(message);
+            }
+            else
+            {
+                messageEntries = new List<Message>();
+            }
+            var messages = JsonConvert.SerializeObject(messageEntries);
             if(!db.StringSet(messageKey, messages, TimeSpan.FromHours(12)))
                 throw new InvalidOperationException($"Error writing {message.Username} {message.Body} to redis");
         }
