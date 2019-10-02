@@ -1,60 +1,66 @@
+using System;
 using System.Collections.Generic;
-using System.Net.Http;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using FunctionsDemo.Notify.Models.Room;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Azure.EventHubs;
 using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Logging;
+using Microsoft.Azure.WebJobs.Extensions.Http;
+using Microsoft.Azure.WebJobs.Extensions.SignalRService;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 
 namespace FunctionsDemo.Notify.Functions
 {
     public static class RoomFunction
     {
-        [FunctionName(nameof(Notify))]
-        public static async Task<List<string>> Notify(
-            [OrchestrationTrigger] DurableOrchestrationContext context)
+        [FunctionName("negotiate")]
+        public static IActionResult GetSignalRInfo(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get")] HttpRequest req,
+            [SignalRConnectionInfo(HubName = "messages")] SignalRConnectionInfo connectionInfo)
         {
-            var outputs = new List<string>();
-
-            // Replace "hello" with the name of your Durable Activity Function.
-            outputs.Add(await context.CallActivityAsync<string>("Notify_Hello", "Tokyo"));
-            outputs.Add(await context.CallActivityAsync<string>("Notify_Hello", "Seattle"));
-            outputs.Add(await context.CallActivityAsync<string>("Notify_Hello", "London"));
-
-            // returns ["Hello Tokyo!", "Hello Seattle!", "Hello London!"]
-            return outputs;
+            return (ActionResult)new OkObjectResult(connectionInfo);
         }
 
-        [FunctionName("Notify_Hello")]
-        public static string SayHello([ActivityTrigger] string name, ILogger log)
-        {
-            log.LogInformation($"Saying hello to {name}.");
-            return $"Hello {name}!";
-        }
-
-        [FunctionName("Notify_HttpStart")]
-        public static async Task<HttpResponseMessage> HttpStart(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post")]HttpRequestMessage req,
-            [OrchestrationClient]DurableOrchestrationClient starter,
+        [FunctionName(nameof(MessagesObserver))]
+        public static async Task MessagesObserver(
+            [EventHubTrigger("messages",
+                Connection = "EventHubConnection")] 
+            EventData[] events,
+            [SignalR(HubName = "messages")] IAsyncCollector<SignalRMessage> signalR,
             ILogger log)
         {
-            // Function input comes from the request content.
-            string instanceId = await starter.StartNewAsync("Notify", null);
+            var exceptions = new List<Exception>();
 
-            log.LogInformation($"Started orchestration with ID = '{instanceId}'.");
-
-            return starter.CreateCheckStatusResponse(req, instanceId);
-        }
-
-        public static JsonSerializerSettings SerializerSettings =>
-            new JsonSerializerSettings
+            foreach (var eventData in events)
             {
-                ContractResolver = new DefaultContractResolver
+                try
                 {
-                    NamingStrategy = new CamelCaseNamingStrategy()
-                },
-            };
+                    var body = Encoding.UTF8.GetString(eventData.Body.Array, eventData.Body.Offset, eventData.Body.Count);
+                    var message = JsonConvert.DeserializeObject<Message>(body);
+                    log.LogInformation(message.Body);
+                    await signalR.AddAsync(
+                        new SignalRMessage
+                        {
+                            Target = "addMessage",
+                            Arguments = new object[] { message }
+                        });
+                    await Task.Yield();
+                }
+                catch (Exception e)
+                {
+                    exceptions.Add(e);
+                }
+            }
+
+            if (exceptions.Count > 1)
+                throw new AggregateException(exceptions);
+
+            if (exceptions.Count == 1)
+                throw exceptions.Single();
+        }
     }
 }

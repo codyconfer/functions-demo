@@ -1,5 +1,9 @@
 using System;
+using System.Threading.Tasks;
 using FunctionsDemo.Notify.Models.Room;
+using Microsoft.Azure.WebJobs;
+using Microsoft.Azure.WebJobs.Extensions.SignalRService;
+using Newtonsoft.Json;
 using StackExchange.Redis;
 
 namespace FunctionsDemo.Notify.Services
@@ -21,10 +25,15 @@ namespace FunctionsDemo.Notify.Services
         });
 
         private ConnectionMultiplexer RedisConnection => _lazyConnection.Value;
-
-        private readonly IDatabase _db;
         #endregion Redis
 
-
+        public void StoreMessage(Message message)
+        {
+            var db = RedisConnection.GetDatabase();
+            var messageKey = $"{MessageSetPrefix}0";
+            var messages = JsonConvert.SerializeObject(message);
+            if(!db.StringSet(messageKey, messages, TimeSpan.FromHours(12)))
+                throw new InvalidOperationException($"Error writing {message.Username} {message.Body} to redis");
+        }
     }
 }
