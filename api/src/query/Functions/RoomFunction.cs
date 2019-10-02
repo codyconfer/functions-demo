@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using FunctionsDemo.Query.Services.Room;
+using Newtonsoft.Json.Serialization;
 
 namespace FunctionsDemo.Query.Functions
 {
@@ -15,7 +16,7 @@ namespace FunctionsDemo.Query.Functions
     {
         [FunctionName(nameof(GetMessages))]
         public static async Task<IActionResult> GetMessages(
-            [HttpTrigger(AuthorizationLevel.Function, "get", Route = "room/messages")] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "room/messages")] HttpRequest req,
             ILogger log)
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
@@ -26,12 +27,21 @@ namespace FunctionsDemo.Query.Functions
             {
                 return new BadRequestObjectResult("Could not parse roomId");
             }
-
+            
             var service = new RoomService();
             var result = service.GetMessages(roomId);
-            var response = JsonConvert.SerializeObject(result);
+            var response = JsonConvert.SerializeObject(result, SerializerSettings);
 
             return new OkObjectResult(response);
         }
+
+        public static JsonSerializerSettings SerializerSettings =>
+            new JsonSerializerSettings
+            {
+                ContractResolver = new DefaultContractResolver
+                {
+                    NamingStrategy = new CamelCaseNamingStrategy()
+                },
+            };
     }
 }

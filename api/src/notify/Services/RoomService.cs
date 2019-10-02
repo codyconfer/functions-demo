@@ -6,6 +6,9 @@ namespace FunctionsDemo.Notify.Services
 {
     public class RoomService
     {
+        #region Redis
+        private const string MessageSetPrefix = "messages-";
+
         private readonly Lazy<ConnectionMultiplexer> _lazyConnection = new Lazy<ConnectionMultiplexer>(() =>
         {
             var connectionString = Environment.GetEnvironmentVariable("RedisConnection");
@@ -18,5 +21,10 @@ namespace FunctionsDemo.Notify.Services
         });
 
         private ConnectionMultiplexer RedisConnection => _lazyConnection.Value;
+
+        private readonly IDatabase _db;
+        #endregion Redis
+
+
     }
 }

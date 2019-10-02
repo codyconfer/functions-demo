@@ -7,8 +7,7 @@ namespace FunctionsDemo.Query.Services.Room
 {
     public class RoomService
     {
-        #region redis fields
-
+        #region Redis
         private const string MessageSetPrefix = "messages-";
 
         private readonly Lazy<ConnectionMultiplexer> _lazyConnection = new Lazy<ConnectionMultiplexer>(() =>
@@ -25,7 +24,7 @@ namespace FunctionsDemo.Query.Services.Room
         private ConnectionMultiplexer RedisConnection => _lazyConnection.Value;
 
         private readonly IDatabase _db;
-        #endregion redis fields
+        #endregion Redis
 
         public MessagesResponse GetMessages(int roomId) 
         {
