@@ -5,6 +5,8 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace FunctionsDemo.Notify.Functions
 {
@@ -45,5 +47,14 @@ namespace FunctionsDemo.Notify.Functions
 
             return starter.CreateCheckStatusResponse(req, instanceId);
         }
+
+        public static JsonSerializerSettings SerializerSettings =>
+            new JsonSerializerSettings
+            {
+                ContractResolver = new DefaultContractResolver
+                {
+                    NamingStrategy = new CamelCaseNamingStrategy()
+                },
+            };
     }
 }

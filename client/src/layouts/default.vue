@@ -19,7 +19,6 @@ export default {
         AppHeader,
         AppFooter
     },
-
     created() {
         this.$store.subscribe((mutation, state) => {
             console.log(mutation.type);

@@ -1,3 +1,5 @@
+const axios = require("axios");
+
 export const state = () => ({
   messages: [],
   users: [],
@@ -17,16 +19,21 @@ export const state = () => ({
 });
 
 export const mutations = {
-  addMessage(state, message) {
+  async addMessage(state, message) {
     if (!state.users.includes(message.username)) {
       state.users.push(message.username);
     }
-    state.messages.push({
+    let entry = {
       username: message.username,
       body: message.body,
       messageId: state.nextMessageId,
       colorId: state.users.indexOf(message.username) % state.colors.length
-    });
+    };
+    state.messages.push(entry);
+    let { data } = await axios.post(
+      "https://functions-demo-mutate.azurewebsites.net/api/room/message",
+      entry
+    );
     state.nextMessageId++;
   },
   fetch(roomId) {
@@ -34,6 +41,12 @@ export const mutations = {
   },
   clear() {
     state.messages = [];
+  },
+  setMessages(state, response) {
+    console.log(response);
+    state.messages = response.messages;
+    state.roomId = response.roomId;
+    state.nextMessageId = response.messages.length;
   }
 };
 

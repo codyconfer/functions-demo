@@ -1,11 +1,31 @@
 using System;
 using System.Collections.Generic;
 using FunctionsDemo.Query.Models.Room;
+using StackExchange.Redis;
 
 namespace FunctionsDemo.Query.Services.Room
 {
     public class RoomService
     {
+        #region Redis
+        private const string MessageSetPrefix = "messages-";
+
+        private readonly Lazy<ConnectionMultiplexer> _lazyConnection = new Lazy<ConnectionMultiplexer>(() =>
+        {
+            var connectionString = Environment.GetEnvironmentVariable("RedisConnection");
+            if (string.IsNullOrWhiteSpace(connectionString))
+            {
+                throw new InvalidOperationException("RedisConnection must be populated in app settings");
+            }
+
+            return ConnectionMultiplexer.Connect(connectionString);
+        });
+
+        private ConnectionMultiplexer RedisConnection => _lazyConnection.Value;
+
+        private readonly IDatabase _db;
+        #endregion Redis
+
         public MessagesResponse GetMessages(int roomId) 
         {
             return new MessagesResponse()
@@ -87,5 +107,12 @@ namespace FunctionsDemo.Query.Services.Room
                 }
             };
         }
+
+        //public MessagesResponse GetMessagesLive(int roomId)
+        //{
+        //    var db = RedisConnection.GetDatabase();
+        //    var messageKey = $"{MessageSetPrefix}{roomId}";
+        //    var messages = db.StringGet(messageKey);
+        //}
     }
 }

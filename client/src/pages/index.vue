@@ -5,11 +5,18 @@
     </section>
 </template>
 
-<script lang="ts">
+<script>
 import MessageView from "~/components/MessageView.vue";
 import MessageCompose from "~/components/MessageCompose.vue";
+const axios = require("axios");
 
 export default {
+    async fetch({ store, params }) {
+        // let { data } = await axios.get(
+        //     "http://localhost:7071/api/room/messages?roomId=0"
+        // );
+        // store.commit("room/setMessages", data);
+    },
     layout: "default",
     components: {
         MessageView,
@@ -17,7 +24,7 @@ export default {
     },
     head() {
         return {
-            title: "Functions Demo",
+            title: "Functions Demo"
         };
     }
 };
