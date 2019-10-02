@@ -12,10 +12,10 @@ const axios = require("axios");
 
 export default {
     async fetch({ store, params }) {
-        // let { data } = await axios.get(
-        //     "http://localhost:7071/api/room/messages?roomId=0"
-        // );
-        // store.commit("room/setMessages", data);
+        let { data } = await axios.get(
+            "https://functions-demo-read.azurewebsites.net/api/room/messages?roomId=0"
+        );
+        store.commit("room/setMessages", data);
     },
     layout: "default",
     components: {
