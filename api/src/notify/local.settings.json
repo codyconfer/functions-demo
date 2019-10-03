@@ -4,7 +4,7 @@
     "AzureWebJobsStorage": "UseDevelopmentStorage=true",
     "FUNCTIONS_WORKER_RUNTIME": "dotnet",
     "RedisConnection": "",
-    "EventHubConnection": "Endpoint=sb://functions-demo-messages.servicebus.windows.net/;SharedAccessKeyName=Subscriber;SharedAccessKey=+cbMlw96ReUC6w3jV4/vk4NYSgsgVBRrI4Sw30K+OwY=;",
-    "AzureSignalRConnectionString": "Endpoint=https://functions-demo-messages.service.signalr.net;AccessKey=QUYyogaX5gFio3SujHuwazHzxpKCsPmtATut/N3Vw5E=;Version=1.0;"
+    "EventHubConnection": "",
+    "AzureSignalRConnectionString": ""
   }
 }
