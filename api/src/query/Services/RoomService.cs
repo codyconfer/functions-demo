@@ -24,8 +24,6 @@ namespace FunctionsDemo.Query.Services.Room
         });
 
         private ConnectionMultiplexer RedisConnection => _lazyConnection.Value;
-
-        private readonly IDatabase _db;
         #endregion Redis
 
         public MessagesResponse GetMessages(int roomId)

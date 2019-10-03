@@ -1,6 +1,6 @@
 <template>
     <section class="messenger">
-        <MessageView class="message-view"></MessageView>
+        <MessageView ref="messageview" class="message-view"></MessageView>
         <MessageCompose class="message-compose"></MessageCompose>
     </section>
 </template>
@@ -26,6 +26,9 @@ export default {
         return {
             title: "Functions Demo"
         };
+    },
+    mounted: function() {
+        this.$connect(this.$store);
     }
 };
 </script>

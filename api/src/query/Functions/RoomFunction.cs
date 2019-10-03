@@ -29,7 +29,6 @@ namespace FunctionsDemo.Query.Functions
             }
             
             var service = new RoomService();
-            service.InflateMockMessages();
             var result = service.GetMessages(roomId);
             var response = JsonConvert.SerializeObject(result, SerializerSettings);
 

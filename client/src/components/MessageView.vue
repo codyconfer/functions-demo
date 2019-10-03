@@ -14,6 +14,9 @@
 </template>
 
 <script>
+const signalR = require("@aspnet/signalr");
+const axios = require("axios");
+
 export default {
     computed: {
         messages() {
@@ -25,7 +28,7 @@ export default {
         color(colorId) {
             return this.$store.state.room.colors[colorId];
         }
-    }
+    },
 };
 </script>
 

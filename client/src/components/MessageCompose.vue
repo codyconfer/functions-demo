@@ -44,7 +44,7 @@ export default {
     },
     methods: {
         send: function() {
-            this.$store.commit("room/addMessage", {
+            this.$store.dispatch("room/postMessageAction", {
                 username: this.username,
                 body: this.body
             });
